@@ -1,0 +1,15 @@
+{
+  "name": "cardigoo-users-service-node-modules-layer",
+  "version": "1.0.0",
+  "description": "Cardigoo Users Service Node Modules Layer",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "serverless-http": "^3.1.1"
+  }
+}

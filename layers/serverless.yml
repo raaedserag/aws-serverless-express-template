@@ -1,0 +1,24 @@
+service: cardigoo-users-service-layers
+frameworkVersion: '3'
+configValidationMode: error
+useDotenv: true
+deprecationNotificationMode: warn:summary
+
+provider:
+  name: aws
+  tags:
+    SERVICE: ${self:service}
+  stackTags:
+    SERVICE: ${self:service}
+  deploymentMethod: changesets
+  
+  runtime: nodejs18.x
+  versionFunctions: false
+
+package:
+  excludeDevDependencies: true
+  
+layers:
+  NodeModules:
+    path: node-modules-layer
+    description: "NodeJS Dependencies"
