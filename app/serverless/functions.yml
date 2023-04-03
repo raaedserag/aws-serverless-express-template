@@ -1,0 +1,8 @@
+gateway:
+  handler: index.gatewayHandler
+  layers:
+    - ${cf:${self:custom.layersStackName}.NodeModulesLambdaLayerQualifiedArn}
+  events:
+    - httpApi: "*"
+  environment:
+    USERS_TABLE: "${self:custom.usersTableName}"

@@ -1,19 +1,33 @@
-service: cardigoo-users-service-app
+service: ${env:NAMESPACE}-app
 frameworkVersion: "3"
 configValidationMode: error
 useDotenv: true
 deprecationNotificationMode: warn:summary
 
+package:
+  patterns:
+    - "!**"
+    - "index.js"
+    - "src/**"
+    - "package.json"
+    - "package-lock.json"
+
 custom:
-  tableName: "users-table-${sls:stage}"
-  layersStackName: "cardigoo-users-service-layers-${sls:stage}"
+  stage: "${sls:stage}"
+  namespace: "${env:NAMESPACE}"
+  usersTableName: "${self:custom.namespace}-users-table-${self:custom.stage}"
+  layersStackName: "${env:NAMESPACE}-layers-${sls:stage}"
 
 provider:
   name: aws
+  region: "${env:AWS_REGION}"
+  profile: "${env:AWS_PROFILE}"
   tags:
-    SERVICE: ${self:service}
+    namespace: ${self:custom.namespace}
+    service: ${self:service}
   stackTags:
-    SERVICE: ${self:service}
+    namespace: ${self:custom.namespace}
+    service: ${self:service}
   deploymentMethod: changesets
 
   runtime: nodejs18.x
@@ -39,43 +53,15 @@ provider:
   #   disableDefaultEndpoint: true
   #   cors: true
   #   payload: "2.0"
-    # authorizers:
-    #   cognitoAuthorizer:
-    #     identitySource: $request.header.Authorization
-    #     issuerUrl: ${self:custom.userPoolIssuer}
-    #     audience: ${self:custom.userPoolClientId}
-    #     name: CognitoUserPoolAuthorizer
-    #     resultTtlInSeconds: 300
-    #     type: COGNITO_USER_POOLS
+  # authorizers:
+  #   cognitoAuthorizer:
+  #     identitySource: $request.header.Authorization
+  #     issuerUrl: ${self:custom.userPoolIssuer}
+  #     audience: ${self:custom.userPoolClientId}
+  #     name: CognitoUserPoolAuthorizer
+  #     resultTtlInSeconds: 300
+  #     type: COGNITO_USER_POOLS
 
-package:
-  patterns:
-    - "!**"
-    - "index.js"
-    - "src/**"
-    - "package.json"
-    - "package-lock.json"
+functions: ${file(./serverless/functions.yml)}
 
-functions:
-  api:
-    handler: index.handler
-    layers:
-      - ${cf:${self:custom.layersStackName}.NodeModulesLambdaLayerQualifiedArn}
-    events:
-      - httpApi: '*'
-    environment:
-      USERS_TABLE: ${self:custom.tableName}
-
-resources:
-  Resources:
-    UsersTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        AttributeDefinitions:
-          - AttributeName: userId
-            AttributeType: S
-        KeySchema:
-          - AttributeName: userId
-            KeyType: HASH
-        BillingMode: PAY_PER_REQUEST
-        TableName: ${self:custom.tableName}
+resources: ${file(./serverless/resources-cfn-template.yml)}

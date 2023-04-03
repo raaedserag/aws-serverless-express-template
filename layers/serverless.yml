@@ -1,15 +1,22 @@
-service: cardigoo-users-service-layers
-frameworkVersion: '3'
+service: ${env:NAMESPACE}-layers
+frameworkVersion: "3"
 configValidationMode: error
-useDotenv: true
 deprecationNotificationMode: warn:summary
 
+custom:
+  stage: "${sls:stage}"
+  namespace: "${env:NAMESPACE}"
+  
 provider:
   name: aws
+  region: "${env:AWS_REGION}"
+  profile: "${env:AWS_PROFILE}"
   tags:
-    SERVICE: ${self:service}
+    namespace: ${self:custom.namespace}
+    service: ${self:service}
   stackTags:
-    SERVICE: ${self:service}
+    namespace: ${self:custom.namespace}
+    service: ${self:service}
   deploymentMethod: changesets
   
   runtime: nodejs18.x
