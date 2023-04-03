@@ -1,5 +1,5 @@
 {
-  "name": "cardigoo-users-service-node-modules-layer",
+  "name": "serverless-template-node-modules-layer",
   "version": "1.0.0",
   "description": "Cardigoo Users Service Node Modules Layer",
   "scripts": {

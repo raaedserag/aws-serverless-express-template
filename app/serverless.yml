@@ -49,18 +49,6 @@ provider:
             - Fn::GetAtt: [UsersTable, Arn]
   environment:
     NODE_PATH: "/opt/node_modules"
-  # httpApi:
-  #   disableDefaultEndpoint: true
-  #   cors: true
-  #   payload: "2.0"
-  # authorizers:
-  #   cognitoAuthorizer:
-  #     identitySource: $request.header.Authorization
-  #     issuerUrl: ${self:custom.userPoolIssuer}
-  #     audience: ${self:custom.userPoolClientId}
-  #     name: CognitoUserPoolAuthorizer
-  #     resultTtlInSeconds: 300
-  #     type: COGNITO_USER_POOLS
 
 functions: ${file(./serverless/functions.yml)}
 
